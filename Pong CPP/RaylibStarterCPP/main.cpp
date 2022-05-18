@@ -9,10 +9,10 @@ int main(int argc, char* argv[])
     //--------------------------------------------------------------------------------------
     int screenWidth = 800;
     int screenHeight = 450;
-
-    int counter = 1;
     float deltatime = 0.005f;
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+
+    bool isDebug = false;
 
     //Player1 variable declarations
     float p1x = 100;
@@ -96,6 +96,19 @@ int main(int argc, char* argv[])
                 p2y = 325;
             }
         }
+
+        if (IsKeyReleased(KEY_E))
+        {
+            if (isDebug == false)
+            {
+                isDebug == true;
+            }
+            else
+            {
+                isDebug == false;
+            }
+        }
+
         // update htibox boundary player 1
         p1yLowerLimit = p1y - 10;
         p1yUpperLimit = p1y + 120;
@@ -116,22 +129,26 @@ int main(int argc, char* argv[])
         {
             ballxDirection = -1;
         }
+        
+
 
         // Draw
         //----------------------------------------------------------------------------------
-        counter++;
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
         // DEBUG SHOW HITBOUNDARY
-        //draws player 1 Hitbox upper
-        DrawRectangle(p1x, p1yUpperLimit, 20, 20, RED);
-        //draws player 1 Hitbox bottom
-        DrawRectangle(p1x, p1yLowerLimit, 20, 20, RED);
-        //draws player 2 Hitbox upper
-        DrawRectangle(p2x, p2yUpperLimit, 20, 20, RED);
-        //draws player 2 Hitbox bottom
-        DrawRectangle(p2x, p2yLowerLimit, 20, 20, RED);
+        if (isDebug == true)
+        {
+            //draws player 1 Hitbox upper
+            DrawRectangle(p1x, p1yUpperLimit, 20, 20, RED);
+            //draws player 1 Hitbox bottom
+            DrawRectangle(p1x, p1yLowerLimit, 20, 20, RED);
+            //draws player 2 Hitbox upper
+            DrawRectangle(p2x, p2yUpperLimit, 20, 20, RED);
+            //draws player 2 Hitbox bottom
+            DrawRectangle(p2x, p2yLowerLimit, 20, 20, RED);
+        }
 
         //draws player 1 paddle
         DrawRectangle(p1x, p1y, p1Width, p1Height, BLACK);
@@ -139,6 +156,7 @@ int main(int argc, char* argv[])
         DrawRectangle(p2x, p2y, p1Width, p1Height, BLACK);
         //draws Ball
         DrawRectangle(ballx, bally, ballWidth, ballHeight, BLACK);
+
         //draws score text
         DrawText("0", 350, 20, 80, LIGHTGRAY);
         DrawText("|", 410, 20, 80, LIGHTGRAY);
