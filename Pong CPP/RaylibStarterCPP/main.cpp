@@ -2,6 +2,7 @@
 #define RAYGUI_IMPLEMENTATION
 #define RAYGUI_SUPPORT_ICONS
 #include "raygui.h"
+#include <string>
 
 int main(int argc, char* argv[])
 {
@@ -10,13 +11,15 @@ int main(int argc, char* argv[])
     int screenWidth = 800;
     int screenHeight = 450;
     float deltatime = 0.005f;
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "Pong C++");
 
     bool isDebug = false;
 
     //Player1 variable declarations
     float p1x = 100;
     float p1y = 150;
+    int p1movementDirection = 0;
+
     //Collision Stuff
     float p1yLowerLimit = p1y - 10;
     float p1yUpperLimit = p1y + 120;
@@ -25,11 +28,12 @@ int main(int argc, char* argv[])
     float p1Height = 125;
 
     float p1Speed = 1000;
-    float p1Score = 0;
+    int p1Score = 0;
 
     //Player2 Variable declarations
     float p2x = 700;
     float p2y = 150;
+    int p2movementDirection = 0;
     //Collision Stuff
     float p2yLowerLimit = p2y - 10;
     float p2yUpperLimit = p2y + 150;
@@ -39,7 +43,7 @@ int main(int argc, char* argv[])
     float p2Height = 125;
 
     float p2Speed = 1000;
-    float p2Score = 0;
+    int p2Score = 0;
 
     //Ball Variables
     float ballx = 400;
@@ -50,7 +54,7 @@ int main(int argc, char* argv[])
 
     float ballSpeed = 600;
     int ballxDirection = 1;
-    int ballyDirection = 0;
+    int ballyDirection = 1;
 
     SetTargetFPS(60);
     //--------------------------------------------------------------------------------------
@@ -63,9 +67,13 @@ int main(int argc, char* argv[])
 
         /*player 1 movement : if player is holding W then decrease Y coordinate to make the player 1 paddle go up (this is because the window is essentially in
         the bottom right quadrant of a number plane thus in it's current position decreasing the y value makes the paddle go up)*/ 
+
+
+        // PLAYER CONTROLS
         if (IsKeyDown(KEY_W))
         {
-            p1y = p1y + -1 * p1Speed * deltatime;
+            p1movementDirection = -1;
+            p1y = p1y + p1movementDirection * p1Speed * deltatime;
             if (p1y < 0)
             {
                 p1y = 0;
@@ -73,7 +81,8 @@ int main(int argc, char* argv[])
         }
         if (IsKeyDown(KEY_S))
         {
-            p1y = p1y + 1 * p1Speed * deltatime;
+            p1movementDirection = 1;
+            p1y = p1y + p1movementDirection * p1Speed * deltatime;
             if (p1y > 325)
             {
                 p1y = 325;
@@ -82,7 +91,8 @@ int main(int argc, char* argv[])
         //Player 2 controls
         if (IsKeyDown(KEY_UP))
         {
-            p2y = p2y + -1 * p2Speed * deltatime;
+            p2movementDirection = -1;
+            p2y = p2y + p2movementDirection * p2Speed * deltatime;
             if (p2y < 0)
             {
                 p2y = 0;
@@ -90,14 +100,15 @@ int main(int argc, char* argv[])
         }
         if (IsKeyDown(KEY_DOWN))
         {
-            p2y = p2y + 1 * p1Speed * deltatime;
+            p2movementDirection = 1;
+            p2y = p2y + p2movementDirection * p1Speed * deltatime;
             if (p2y > 325)
             {
                 p2y = 325;
             }
         }
 
-        if (IsKeyReleased(KEY_E))
+        if (IsKeyPressed(KEY_E))
         {
             if (isDebug == false)
             {
@@ -108,7 +119,7 @@ int main(int argc, char* argv[])
                 isDebug == false;
             }
         }
-
+        //UPDATE HITBOX BOUNDS
         // update htibox boundary player 1
         p1yLowerLimit = p1y - 10;
         p1yUpperLimit = p1y + 120;
@@ -116,21 +127,98 @@ int main(int argc, char* argv[])
         p2yLowerLimit = p2y - 10;
         p2yUpperLimit = p2y + 120;
 
-        //ball movement
+        
+        //BALL PHYSICS AND COLLISION
+        //perpetual ball movement
         ballx = ballx + ballxDirection * ballSpeed * deltatime;
+        bally = bally + ballyDirection * ballSpeed * deltatime;
         //check ball collision with player 1 paddle
         if (ballx == p1x && bally >= p1yLowerLimit && bally <= p1yUpperLimit)
         {
             ballxDirection = 1;
+            if (p1movementDirection == 1)
+            {
+                ballyDirection = 1;
+            }
+            else if (p1movementDirection == -1)
+            {
+                ballyDirection - 1;
+            }
+            else
+            {
+                ballyDirection = 0;
+            }
+            //increment speed of ball every hit
+            //ballSpeed = ballSpeed + 50;
         }
 
         //check ball collision with player 2 paddle
         if (ballx == p2x && bally >= p2yLowerLimit && bally < p2yUpperLimit)
         {
             ballxDirection = -1;
+            if (p2movementDirection == 1)
+            {
+                ballyDirection = 1;
+            }
+            else if (p2movementDirection == -1)
+            {
+                ballyDirection - 1;
+            }
+            else
+            {
+                ballyDirection = 0;
+            }
+            //increment speed of ball every hit
+            //ballSpeed = ballSpeed + 50;
         }
-        
+        //bounce off top and bottom of screen
+        //top bounce
+        if (bally <= 0)
+        {
+            ballyDirection = 1;
+        }
+        //bottom bounce
+        if (bally >= 450)
+        {
+            ballyDirection = -1;
+        }
 
+        //check if scored
+        if (ballx <= 0)
+        {
+            p2Score++;
+            if (p2Score < 5)
+            {
+                ballx = 400;
+                bally = 200;
+            }
+        }
+        //bottom bounce
+        if (ballx >= 800)
+        {
+            p1Score++;
+            if (p1Score < 5)
+            {
+                ballx = 400;
+                bally = 200;
+            }
+        }
+
+        //check if a player has won the game
+        if (p1Score >= 5)
+        {
+            DrawText("Player 1 wins!", 400, 200, 56, GREEN);
+            ballx = 900;
+            bally = 200;
+            ballSpeed = 0;
+        }
+        if (p2Score >= 5)
+        {
+            DrawText("Player 2 wins!", 400, 200, 56, GREEN);
+            ballx = 0;
+            bally = -100;
+            ballSpeed = 0;
+        }
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -158,9 +246,13 @@ int main(int argc, char* argv[])
         DrawRectangle(ballx, bally, ballWidth, ballHeight, BLACK);
 
         //draws score text
-        DrawText("0", 350, 20, 80, LIGHTGRAY);
+        std::string p1ScoreText = std::to_string(p1Score);
+        std::string p2ScoreText = std::to_string(p2Score);
+
+
+        DrawText(p1ScoreText.c_str(), 350, 20, 80, LIGHTGRAY);
         DrawText("|", 410, 20, 80, LIGHTGRAY);
-        DrawText("0", 440, 20, 80, LIGHTGRAY);
+        DrawText(p2ScoreText.c_str(), 440, 20, 80, LIGHTGRAY);
         
 
         EndDrawing();
