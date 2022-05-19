@@ -204,21 +204,7 @@ int main(int argc, char* argv[])
             }
         }
 
-        //check if a player has won the game
-        if (p1Score >= 5)
-        {
-            DrawText("Player 1 wins!", 400, 200, 56, GREEN);
-            ballx = 900;
-            bally = 200;
-            ballSpeed = 0;
-        }
-        if (p2Score >= 5)
-        {
-            DrawText("Player 2 wins!", 400, 200, 56, GREEN);
-            ballx = 0;
-            bally = -100;
-            ballSpeed = 0;
-        }
+        
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -246,10 +232,32 @@ int main(int argc, char* argv[])
         DrawRectangle(ballx, bally, ballWidth, ballHeight, BLACK);
 
         //draws score text
+        if (p1Score >= 5)
+        {
+            p1Score = 5;
+        }
+        if (p2Score >= 5)
+        {
+            p2Score = 5;
+        }
         std::string p1ScoreText = std::to_string(p1Score);
         std::string p2ScoreText = std::to_string(p2Score);
-
-
+        //check if a player has won the game
+        if (p1Score >= 5)
+        {
+            DrawText("Player 1 wins!", 250, 200, 56, LIGHTGRAY);
+            ballx = 900;
+            bally = 200;
+            ballSpeed = 0;
+        }
+        if (p2Score >= 5)
+        {
+            DrawText("Player 2 wins!", 250, 200, 56, LIGHTGRAY);
+            ballx = 0;
+            bally = -100;
+            ballSpeed = 0;
+        }
+        
         DrawText(p1ScoreText.c_str(), 350, 20, 80, LIGHTGRAY);
         DrawText("|", 410, 20, 80, LIGHTGRAY);
         DrawText(p2ScoreText.c_str(), 440, 20, 80, LIGHTGRAY);
