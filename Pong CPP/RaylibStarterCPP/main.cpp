@@ -24,6 +24,9 @@ int main(int argc, char* argv[])
     float p1yLowerLimit = p1y - 10;
     float p1yUpperLimit = p1y + 120;
 
+    float p1xLowerLimit = p1x - 10;
+    float p1xUpperLimit = p1x + 10;
+
     float p1Width = 20;
     float p1Height = 125;
 
@@ -37,6 +40,10 @@ int main(int argc, char* argv[])
     //Collision Stuff
     float p2yLowerLimit = p2y - 10;
     float p2yUpperLimit = p2y + 150;
+
+    float p2xLowerLimit = p2x - 10;
+    float p2xUpperLimit = p2x + 10;
+
     //I know there is no reason to keep this in memory because we already have the value from p1 but it's less confusing to read this way for a larger project
     // I'd care but for something small like this it doesn't change much
     float p2Width = 20;
@@ -127,13 +134,18 @@ int main(int argc, char* argv[])
         p2yLowerLimit = p2y - 10;
         p2yUpperLimit = p2y + 120;
 
+        p1xLowerLimit = p1x - 10;
+        p1xUpperLimit = p1x + 10;
+
+        p2xLowerLimit = p2x - 10;
+        p2xUpperLimit = p2x + 10;
         
         //BALL PHYSICS AND COLLISION
         //perpetual ball movement
         ballx = ballx + ballxDirection * ballSpeed * deltatime;
         bally = bally + ballyDirection * ballSpeed * deltatime;
         //check ball collision with player 1 paddle
-        if (ballx == p1x && bally >= p1yLowerLimit && bally <= p1yUpperLimit)
+        if (ballx >= p1xLowerLimit && ballx <= p1xUpperLimit && bally >= p1yLowerLimit && bally <= p1yUpperLimit)
         {
             ballxDirection = 1;
             if (p1movementDirection == 1)
@@ -149,11 +161,11 @@ int main(int argc, char* argv[])
                 ballyDirection = 0;
             }
             //increment speed of ball every hit
-            //ballSpeed = ballSpeed + 50;
+            ballSpeed = ballSpeed + 50;
         }
 
         //check ball collision with player 2 paddle
-        if (ballx == p2x && bally >= p2yLowerLimit && bally < p2yUpperLimit)
+        if (ballx >= p2xLowerLimit && ballx <= p2xUpperLimit && bally >= p2yLowerLimit && bally < p2yUpperLimit)
         {
             ballxDirection = -1;
             if (p2movementDirection == 1)
@@ -169,7 +181,7 @@ int main(int argc, char* argv[])
                 ballyDirection = 0;
             }
             //increment speed of ball every hit
-            //ballSpeed = ballSpeed + 50;
+            ballSpeed = ballSpeed + 50;
         }
         //bounce off top and bottom of screen
         //top bounce
@@ -189,8 +201,11 @@ int main(int argc, char* argv[])
             p2Score++;
             if (p2Score < 5)
             {
+                //reset ball coordinates
                 ballx = 400;
                 bally = 200;
+                //reset ball speed
+                ballSpeed = 600;
             }
         }
         //bottom bounce
@@ -199,8 +214,11 @@ int main(int argc, char* argv[])
             p1Score++;
             if (p1Score < 5)
             {
+                //reset ball coordinates
                 ballx = 400;
                 bally = 200;
+                //reset ball speed
+                ballSpeed = 600;
             }
         }
 
@@ -242,6 +260,7 @@ int main(int argc, char* argv[])
         }
         std::string p1ScoreText = std::to_string(p1Score);
         std::string p2ScoreText = std::to_string(p2Score);
+
         //check if a player has won the game
         if (p1Score >= 5)
         {
@@ -257,7 +276,7 @@ int main(int argc, char* argv[])
             bally = -100;
             ballSpeed = 0;
         }
-        
+        //Scoreboard Text
         DrawText(p1ScoreText.c_str(), 350, 20, 80, LIGHTGRAY);
         DrawText("|", 410, 20, 80, LIGHTGRAY);
         DrawText(p2ScoreText.c_str(), 440, 20, 80, LIGHTGRAY);
