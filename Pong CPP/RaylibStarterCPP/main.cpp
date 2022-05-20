@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     float p1Width = 20;
     float p1Height = 125;
 
-    float p1Speed = 1000;
+    float p1Speed = 1200;
     int p1Score = 0;
 
     //Player2 Variable declarations
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     float p2Width = 20;
     float p2Height = 125;
 
-    float p2Speed = 1000;
+    float p2Speed = 1200;
     int p2Score = 0;
 
     //Ball Variables
@@ -144,6 +144,7 @@ int main(int argc, char* argv[])
         //perpetual ball movement
         ballx = ballx + ballxDirection * ballSpeed * deltatime;
         bally = bally + ballyDirection * ballSpeed * deltatime;
+
         //check ball collision with player 1 paddle
         if (ballx >= p1xLowerLimit && ballx <= p1xUpperLimit && bally >= p1yLowerLimit && bally <= p1yUpperLimit)
         {
