@@ -8,6 +8,13 @@ int main(int argc, char* argv[])
 {
     // Initialization
     //--------------------------------------------------------------------------------------
+
+    /* a few things to note about this code. It does not use a header file.Indead very bad no reason for doing this besides I forgot about it untl
+        I wrote out everything. Another thing of note. No classes. I should of course use classes however when I started coming up with how I could do this
+        I'll admit I got a little carried away and just started writing code willy nilly not really thinking about what I was doing and now if I want classes I'll
+        have to refactor everything cause I was silly and didn't think it through. Other than that the code works fine it's just not following code practices
+        that I should be doing */
+
     int screenWidth = 800;
     int screenHeight = 450;
     float deltatime = 0.005f;
